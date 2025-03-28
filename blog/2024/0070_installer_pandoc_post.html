@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="google-site-verification" content="oTZL-J0lpqoMMfQvrhFBaPfG1gtsswFKz1RzHoMLgbo" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A Gauche - Articles, Vidéos, Podcasts et plus">
+  <meta name="author" content="A Gauche">
+  <meta name="keywords" content="articles, vidéos, podcasts, contenu">
+
+  <!-- Styles -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <link href="css/base.css" rel="stylesheet">
+  <link href="css/baze.css" rel="stylesheet">
+    <style>
+        body {
+            padding-top: 1px; /* Ajustez cette valeur selon la hauteur réelle de votre navbar */
+        }
+    </style>
+  <!--<link href="css/asciidoctor.css" rel="stylesheet">-->
+  <link href="css/justified-nav.css" rel="stylesheet">
+  <link href="css/prettify.css" rel="stylesheet">
+
+  <script src="https://kit.fontawesome.com/01a45d7f35.js" crossorigin="anonymous"></script>
+
+  <link rel="shortcut icon" href="favicon.ico">
+  <title>A Gauche</title>
+
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+  <div class="container">
+    <a class="navbar-brand d-flex align-items-center p-0" href="/">
+      <i class="fa-regular fa-circle-left"></i>
+    </a>
+
+    <button class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <!-- Tous les éléments alignés à gauche -->
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="blog.html"><i class="fa-solid fa-newspaper me-1"></i> Articles</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="blog.html"><i class="fa-solid fa-film me-1"></i> Vidéos</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="blog.html"><i class="fa-solid fa-podcast me-1"></i> Podcast</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="blog.html"><i class="fa-solid fa-calendar-days me-1"></i> Agenda</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fa-solid fa-link me-1"></i> Liens
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="https://www.youtube.com/@agauche"><i class="fa-brands fa-youtube"></i> YouTube</a></li>
+            <li><a class="dropdown-item" href="https://ko-fi.com/agauche"><i class="fa-solid fa-mug-hot me-2"></i> Ko-fi</a></li>
+            <li><a class="dropdown-item" href="https://discord.gg/NGBc4nTrEu"><i class="fa-brands fa-discord me-2"></i> Discord</a></li>
+            <li><a class="dropdown-item" href="https://x.com/AgaucheYT"><i class="fa-brands fa-x-twitter me-2"></i> Twitter</a></li>
+            <li><a class="dropdown-item" href="https://www.facebook.com/AgaucheYoutube"><i class="fa-brands fa-square-facebook me-2"></i> Facebook</a></li>
+            <li><a class="dropdown-item" href="https://www.instagram.com/agauche_officiel"><i class="fa-brands fa-square-instagram me-2"></i> Instagram</a></li>
+            <li><a class="dropdown-item" href="https://open.spotify.com/show/1ovb7OAtTd5a0yg4uw5wqO"><i class="fa-brands fa-spotify me-2"></i> Spotify</a></li>
+            <li><a class="dropdown-item" href="https://deezer.com/show/1001701601"><i class="fa-brands fa-deezer me-2"></i> Deezer</a></li>
+            <li><a class="dropdown-item" href="feed.xml"><i class="fa-solid fa-rss footer-icon me-2"></i> RSS</a></li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/cdn-cgi/l/email-protection#c2a1adacb6a3a1b682a7baa3afb2aea7eca1adaf"><i class="fa-solid fa-envelope me-1"></i> Contact</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+	<div class="page-header">
+		<h1>Installer Pandoc</h1>
+	</div>
+
+	<p><em>30 janvier 2024</em></p>
+
+	<p><div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<div class="title"><em>Temps de lecture : 3 min</em></div>
+<p>Pandoc un convertisseur universel de document</p>
+</div>
+<div class="paragraph">
+<p>Pandoc est un logiciel de traitement de texte open source qui peut être utilisé pour convertir des documents entre différents formats.
+Il existe plusieurs façons d&#8217;installer Pandoc.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_installation_à_partir_de_la_page_de_téléchargement"><strong>Installation à partir de la page de téléchargement</strong></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Pour installer Pandoc à partir de la page de téléchargement, procédez comme suit :</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Accédez à la page de téléchargement de Pandoc : <a href="https://pandoc.org/installing.html/">https://pandoc.org/installing.html</a></p>
+</li>
+<li>
+<p>Téléchargez l&#8217;installateur de package pour votre système d&#8217;exploitation.</p>
+</li>
+<li>
+<p>Exécutez l&#8217;installateur pour installer Pandoc.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><strong>Installation à partir d&#8217;un fichier zip</strong></p>
+</div>
+<div class="paragraph">
+<p>Pour installer Pandoc à partir d&#8217;un fichier zip, procédez comme suit :</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Téléchargez le fichier zip contenant les binaires de Pandoc et la documentation.</p>
+</li>
+<li>
+<p>Décompressez le fichier zip.</p>
+</li>
+<li>
+<p>Déplacez les binaires vers un répertoire de votre choix.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><strong>Installation à l&#8217;aide de Chocolatey</strong></p>
+</div>
+<div class="paragraph">
+<p>Pour installer Pandoc à l&#8217;aide de Chocolatey, procédez comme suit :</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ouvrez une invite de commande.</p>
+</li>
+<li>
+<p>Exécutez la commande suivante :</p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="powershell">choco install pandoc</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Installation à l&#8217;aide de winget</strong></p>
+</div>
+<div class="paragraph">
+<p>Pour installer Pandoc à l&#8217;aide de winget, procédez comme suit :</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ouvrez une invite de commande.</p>
+</li>
+<li>
+<p>Exécutez la commande suivante :</p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="powershell">winget install --source winget --exact --id JohnMacFarlane.Pandoc</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Recommandations</strong></p>
+</div>
+<div class="paragraph">
+<p>Par défaut, Pandoc crée des PDFs à l&#8217;aide de LaTeX.
+Il est recommandé d&#8217;installer LaTeX via MiKTeX.
+Avec l&#8217;option <code>--pdf-engine</code>, vous pouvez toutefois spécifier d&#8217;autres programmes pour cette tâche.</p>
+</div>
+<div class="paragraph">
+<p><strong>Mise en garde</strong></p>
+</div>
+<div class="paragraph">
+<p>L&#8217;utilisation de plusieurs méthodes d&#8217;installation peut entraîner deux installations distinctes de Pandoc.
+Il est recommandé de désinstaller correctement Pandoc avant de passer à une méthode d&#8217;installation alternative.</p>
+</div>
+<div class="paragraph">
+<p><strong>Installation sur linux par WSL</strong></p>
+</div>
+<div class="paragraph">
+<p>Vérifiez si la version de pandoc dans votre gestionnaire de paquets n&#8217;est pas obsolète.
+Pandoc se trouve dans les dépôts de Debian, Ubuntu, Slackware, Arch, Fedora, NixOS, openSUSE, gentoo et Void.</p>
+</div>
+<div class="paragraph">
+<p>Pour obtenir la dernière version, nous proposons un paquet binaire pour l&#8217;architecture amd64 sur la page de téléchargement.</p>
+</div>
+<div class="paragraph">
+<p>L&#8217;exécutable est lié statiquement et n&#8217;a pas de dépendances dynamiques ni de dépendances sur des fichiers de données externes.
+Remarque : en raison du lien statique, le binaire pandoc de ce paquet ne peut pas utiliser les filtres lua qui nécessitent des modules lua externes écrits en C.</p>
+</div>
+<div class="paragraph">
+<p>Un tarball et un installateur deb sont fournis.
+Pour installer le deb :</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="bash">sudo dpkg -i $DEB</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Exemple au moment de l&#8217;écriture :</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="bash">wget https://github.com/jgm/pandoc/releases/download/3.1.11.1/pandoc-3.1.11.1-1-amd64.deb</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="bash">sudo dpkg -i pandoc-3.1.11.1-1-amd64.deb</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>où <code>$DEB</code> est le chemin vers le deb téléchargé.
+Cela installera l&#8217;exécutable <code>pandoc</code> et la page de manuel.</p>
+</div>
+<div class="paragraph">
+<p>Si vous utilisez une distribution basée sur RPM, vous pourrez peut-être installer le deb de notre page de téléchargement à l&#8217;aide d&#8217;alien.</p>
+</div>
+<div class="paragraph">
+<p>Sur n&#8217;importe quelle distribution, vous pouvez installer à partir du tarball dans <code>$DEST</code> (par exemple, <code>/usr/local/</code> ou <code>$HOME/.local</code>) en faisant :</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="bash">tar xvzf $TGZ --strip-components 1 -C $DEST</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>où <code>$TGZ</code> est le chemin vers le tarball zippé téléchargé.
+Pour les versions de Pandoc antérieures à 2.0, qui ne fournissent pas de tarball, essayez plutôt :</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="bash">ar p $DEB data.tar.gz | tar xvz --strip-components 2 -C $DEST</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Vous pouvez également installer à partir de la source, en utilisant les instructions ci-dessous sous <code>Compilation à partir de la source</code>.
+Notez que la plupart des distributions ont la plate-forme Haskell dans leurs dépôts de paquets.
+Par exemple, sur Debian/Ubuntu, vous pouvez l&#8217;installer avec </p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="bash">apt-get install haskell-platform</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Par défaut, Pandoc crée des PDFs à l&#8217;aide de LaTeX.
+Nous vous recommandons d&#8217;installer TeX Live via votre gestionnaire de paquets.
+(Sur Debian/Ubuntu, <code>apt-get install texlive</code>).
+Avec l&#8217;option <code>--pdf-engine</code>, vous pouvez toutefois spécifier d&#8217;autres programmes pour cette tâche.</p>
+</div>
+</div>
+</div></p>
+
+	<section id="disqus_thread"></section>
+	<script type="text/javascript">
+		var disqus_identifier = 'blog/2024/0070_installer_pandoc_post.html';
+
+		(({disqus_shortname, document}) => {
+			injectScript('//' + disqus_shortname + '.disqus.com/embed.js');
+			injectScript('//' + disqus_shortname + '.disqus.com/count.js');
+
+			function injectScript(url) {
+				const s = document.createElement('script');
+				s.async = true;
+				s.src = url;
+				(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(s);
+			}
+		})({'disqus_shortname': 'cheroliv', 'document': document});
+	</script>
+	<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+	<hr/>
+<!-- Footer -->
+<footer class="footer">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4 mb-4 mb-md-0">
+        <h5 class="footer-title">Navigation</h5>
+        <a href="blog.html" class="footer-link"><i class="fa-solid fa-newspaper footer-icon"></i> Articles</a>
+        <a href="blog.html" class="footer-link"><i class="fa-solid fa-film footer-icon"></i> Vidéos</a>
+        <a href="blog.html" class="footer-link"><i class="fa-solid fa-podcast footer-icon"></i> Podcast</a>
+        <a href="blog.html" class="footer-link"><i class="fa-solid fa-calendar-days footer-icon"></i> Agenda</a>
+        <a href="about.html" class="footer-link"><i class="fa-solid fa-info-circle footer-icon"></i> À propos</a>
+        <a href="feed.xml" class="footer-link"><i class="fa-solid fa-rss footer-icon"></i> RSS</a>
+      </div>
+
+      <div class="col-md-4 mb-4 mb-md-0">
+        <h5 class="footer-title">Me suivre</h5>
+        <a href="https://www.youtube.com/@agauche" class="footer-link"><i class="fa-brands fa-youtube"></i> YouTube</a>
+        <a href="https://discord.gg/NGBc4nTrEu" class="footer-link"><i class="fa-brands fa-discord footer-icon"></i> Discord</a>
+        <a href="https://x.com/AgaucheYT" class="footer-link"><i class="fa-brands fa-x-twitter footer-icon"></i> Twitter</a>
+        <a href="https://www.facebook.com/AgaucheYoutube" class="footer-link"><i class="fa-brands fa-square-facebook footer-icon"></i> Facebook</a>
+        <a href="https://www.instagram.com/agauche_officiel" class="footer-link"><i class="fa-brands fa-square-instagram footer-icon"></i> Instagram</a>
+        <a href="https://open.spotify.com/show/1ovb7OAtTd5a0yg4uw5wqO" class="footer-link"><i class="fa-brands fa-spotify footer-icon"></i> Spotify</a>
+        <a href="https://deezer.com/show/1001701601" class="footer-link"><i class="fa-brands fa-deezer footer-icon"></i> Deezer</a>
+      </div>
+
+      <div class="col-md-4">
+        <h5 class="footer-title">Soutien & Contact</h5>
+        <a href="https://ko-fi.com/agauche" class="footer-link mb-3">
+          <i class="fa-solid fa-mug-hot footer-icon"></i> Me soutenir sur Ko-fi
+        </a>
+        <a href="mailto:contact@example.com" class="footer-link">
+          <i class="fa-solid fa-envelope footer-icon"></i> Me contacter par email
+        </a>
+
+        <div class="mt-4">
+          <h5 class="footer-title">À propos</h5>
+          <p>Si c'est à gauche, c'est sur À GAUCHE.</p>
+          Des entrevues avec des personnalités et militants de gauche, ainsi que des extraits de pensées et réflexions de gauche.
+        </div>
+      </div>
+    </div>
+
+    <hr class="my-4 bg-light">
+
+    <div class="row">
+      <div class="col-md-6 text-md-start text-center">
+        <p class="mb-0">&copy; 2019-2025 @AgaucheYT. Tous droits réservés.</p>
+      </div>
+      <div class="col-md-6 text-md-end text-center mt-3 mt-md-0">
+        <a href="#" class="text-white me-3"><i class="fa-solid fa-arrow-up"></i> Retour en haut</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

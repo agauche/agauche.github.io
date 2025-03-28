@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="google-site-verification" content="oTZL-J0lpqoMMfQvrhFBaPfG1gtsswFKz1RzHoMLgbo" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A Gauche - Articles, Vidéos, Podcasts et plus">
+  <meta name="author" content="A Gauche">
+  <meta name="keywords" content="articles, vidéos, podcasts, contenu">
+
+  <!-- Styles -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <link href="css/base.css" rel="stylesheet">
+  <link href="css/baze.css" rel="stylesheet">
+    <style>
+        body {
+            padding-top: 1px; /* Ajustez cette valeur selon la hauteur réelle de votre navbar */
+        }
+    </style>
+  <!--<link href="css/asciidoctor.css" rel="stylesheet">-->
+  <link href="css/justified-nav.css" rel="stylesheet">
+  <link href="css/prettify.css" rel="stylesheet">
+
+  <script src="https://kit.fontawesome.com/01a45d7f35.js" crossorigin="anonymous"></script>
+
+  <link rel="shortcut icon" href="favicon.ico">
+  <title>A Gauche</title>
+
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+  <div class="container">
+    <a class="navbar-brand d-flex align-items-center p-0" href="/">
+      <i class="fa-regular fa-circle-left"></i>
+    </a>
+
+    <button class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <!-- Tous les éléments alignés à gauche -->
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="blog.html"><i class="fa-solid fa-newspaper me-1"></i> Articles</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="blog.html"><i class="fa-solid fa-film me-1"></i> Vidéos</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="blog.html"><i class="fa-solid fa-podcast me-1"></i> Podcast</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="blog.html"><i class="fa-solid fa-calendar-days me-1"></i> Agenda</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fa-solid fa-link me-1"></i> Liens
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="https://www.youtube.com/@agauche"><i class="fa-brands fa-youtube"></i> YouTube</a></li>
+            <li><a class="dropdown-item" href="https://ko-fi.com/agauche"><i class="fa-solid fa-mug-hot me-2"></i> Ko-fi</a></li>
+            <li><a class="dropdown-item" href="https://discord.gg/NGBc4nTrEu"><i class="fa-brands fa-discord me-2"></i> Discord</a></li>
+            <li><a class="dropdown-item" href="https://x.com/AgaucheYT"><i class="fa-brands fa-x-twitter me-2"></i> Twitter</a></li>
+            <li><a class="dropdown-item" href="https://www.facebook.com/AgaucheYoutube"><i class="fa-brands fa-square-facebook me-2"></i> Facebook</a></li>
+            <li><a class="dropdown-item" href="https://www.instagram.com/agauche_officiel"><i class="fa-brands fa-square-instagram me-2"></i> Instagram</a></li>
+            <li><a class="dropdown-item" href="https://open.spotify.com/show/1ovb7OAtTd5a0yg4uw5wqO"><i class="fa-brands fa-spotify me-2"></i> Spotify</a></li>
+            <li><a class="dropdown-item" href="https://deezer.com/show/1001701601"><i class="fa-brands fa-deezer me-2"></i> Deezer</a></li>
+            <li><a class="dropdown-item" href="feed.xml"><i class="fa-solid fa-rss footer-icon me-2"></i> RSS</a></li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/cdn-cgi/l/email-protection#c2a1adacb6a3a1b682a7baa3afb2aea7eca1adaf"><i class="fa-solid fa-envelope me-1"></i> Contact</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+	<div class="page-header">
+		<h1>Guide pratique : recherche de fichiers sous linux</h1>
+	</div>
+
+	<p><em>23 septembre 2024</em></p>
+
+	<p><div id="toc" class="toc">
+<div id="toctitle">Sommaire</div>
+<ul class="sectlevel1">
+<li><a href="#_introduction">1. Introduction</a></li>
+<li><a href="#_utilisation_de_la_commande_find">2. Utilisation de la commande <code>find</code></a>
+<ul class="sectlevel2">
+<li><a href="#_options_supplémentaires_pour_find">2.1. Options supplémentaires pour <code>find</code></a></li>
+</ul>
+</li>
+<li><a href="#_utilisation_de_la_commande_locate">3. Utilisation de la commande <code>locate</code></a></li>
+<li><a href="#_utilisation_de_la_commande_grep_pour_rechercher_du_texte_dans_des_fichiers">4. Utilisation de la commande <code>grep</code> pour rechercher du texte dans des fichiers</a></li>
+<li><a href="#_conclusion">5. Conclusion</a></li>
+</ul>
+</div>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<div class="title"><em>Temps de lecture :</em></div>
+<p>5 à 7 minutes.</p>
+</div>
+<div class="paragraph">
+<div class="title"><em>Public :</em></div>
+<p>Débutant et intermédiaires.</p>
+</div>
+<div class="paragraph">
+<div class="title">La problématique :</div>
+<p>Rechercher des fichiers dans un système d&#8217;exploitation linux à travers le terminal.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_introduction">1. Introduction</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Dans cet article, nous allons explorer comment rechercher un fichier sous Ubuntu en utilisant un terminal Zsh. Zsh (Z shell) est un interpréteur de commandes puissant et largement utilisé pour sa flexibilité et ses fonctionnalités avancées.</p>
+</div>
+<div class="paragraph">
+<p>Ubuntu, une distribution Linux populaire, propose plusieurs outils en ligne de commande pour rechercher des fichiers. Nous verrons comment utiliser des commandes telles que <code>find</code>, <code>locate</code> et <code>grep</code> pour localiser des fichiers rapidement et efficacement dans le terminal.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_utilisation_de_la_commande_find">2. Utilisation de la commande <code>find</code></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>La commande <code>find</code> permet de rechercher des fichiers dans un répertoire spécifique et ses sous-répertoires. Sa syntaxe de base est la suivante :</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="bash">find [chemin] -name [nom_du_fichier]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Voici un exemple pratique où nous recherchons un fichier nommé <code>example.txt</code> dans le répertoire <code>/home</code> :</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="bash">find /home -name "example.txt"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Cette commande va parcourir tous les sous-répertoires de <code>/home</code> et afficher le chemin complet du fichier s&#8217;il est trouvé.</p>
+</div>
+<div class="paragraph">
+<p><strong>Manuel en ligne de la commande <code>find</code> : <a href="https://man.archlinux.org/man/find.1.fr/">man find</a></strong></p>
+</div>
+<div class="sect2">
+<h3 id="_options_supplémentaires_pour_find">2.1. Options supplémentaires pour <code>find</code></h3>
+<div class="paragraph">
+<p>La commande <code>find</code> est très puissante et dispose de nombreuses options. Voici quelques exemples utiles :</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Rechercher par type de fichier</strong> : Pour rechercher uniquement des fichiers, utilisez <code>-type f</code>, et pour rechercher des répertoires, utilisez <code>-type d</code>.</p>
+</li>
+<li>
+<p><strong>Rechercher par taille</strong> : Vous pouvez aussi filtrer les fichiers en fonction de leur taille en utilisant l&#8217;option <code>-size</code>. Par exemple, pour rechercher des fichiers de plus de 100 Mo, utilisez :</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="bash">find /home -size +100M</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_utilisation_de_la_commande_locate">3. Utilisation de la commande <code>locate</code></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>La commande <code>locate</code> est plus rapide que <code>find</code> car elle utilise une base de données pré-indexée des fichiers présents sur le système. Vous devez d&#8217;abord mettre à jour cette base de données avec la commande suivante :</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="bash">sudo updatedb</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Ensuite, vous pouvez rechercher un fichier comme ceci :</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="bash">locate example.txt</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>J&#8217;utilise <a href="https://fr.wikipedia.org/wiki/Z_Shell">zsh</a> avec <a href="https://github.com/ohmyzsh/ohmyzsh/wiki">oh-my-zsh</a>, il s&#8217;avere que la commande <code>locate</code> n&#8217;est pas accessible depuis <code>zsh</code> mais bien possible depuis <code>bash</code>, pour palier à cela, l&#8217;argument <code>-c</code> de la commande <code>bash</code> permet de lancer une commande <code>bash</code> depuis un autre type de terminal.</p>
+</div>
+<div class="paragraph">
+<p>ici je cherche les fichiers qui se termine par le motif <code>001.pdf</code> dans le user directory</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="bash">bash -c "locate ~/*001.pdf"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Manuel en ligne de la commande <code>locate</code> : <a href="https://man.archlinux.org/man/locate.1.fr/">man locate</a></strong></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_utilisation_de_la_commande_grep_pour_rechercher_du_texte_dans_des_fichiers">4. Utilisation de la commande <code>grep</code> pour rechercher du texte dans des fichiers</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Si vous voulez rechercher un texte spécifique à l&#8217;intérieur d&#8217;un fichier, vous pouvez utiliser <code>grep</code>. Par exemple, pour rechercher l&#8217;occurrence du mot "Ubuntu" dans tous les fichiers <code>.txt</code> du répertoire courant, utilisez :</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="bash">grep "Ubuntu" *.txt</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conclusion">5. Conclusion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>La recherche de fichiers sous Ubuntu via un terminal Zsh peut se faire à l&#8217;aide de plusieurs outils puissants. <code>find</code> est flexible et offre une multitude d&#8217;options, tandis que <code>locate</code> permet une recherche rapide à l&#8217;aide d&#8217;une base de données pré-construite. Enfin, <code>grep</code> permet de trouver des occurrences de texte à l&#8217;intérieur des fichiers.</p>
+</div>
+<div class="paragraph">
+<p>Ces commandes vous offrent une gamme complète d&#8217;outils pour rendre vos recherches de fichiers plus efficaces et adaptées à vos besoins et chacune des ces commande posséde un manuel visible avec la commande <code>man</code></p>
+</div>
+</div>
+</div></p>
+
+	<section id="disqus_thread"></section>
+	<script type="text/javascript">
+		var disqus_identifier = 'blog/2024/0074_seach_file_linux_post.html';
+
+		(({disqus_shortname, document}) => {
+			injectScript('//' + disqus_shortname + '.disqus.com/embed.js');
+			injectScript('//' + disqus_shortname + '.disqus.com/count.js');
+
+			function injectScript(url) {
+				const s = document.createElement('script');
+				s.async = true;
+				s.src = url;
+				(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(s);
+			}
+		})({'disqus_shortname': 'cheroliv', 'document': document});
+	</script>
+	<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+	<hr/>
+<!-- Footer -->
+<footer class="footer">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4 mb-4 mb-md-0">
+        <h5 class="footer-title">Navigation</h5>
+        <a href="blog.html" class="footer-link"><i class="fa-solid fa-newspaper footer-icon"></i> Articles</a>
+        <a href="blog.html" class="footer-link"><i class="fa-solid fa-film footer-icon"></i> Vidéos</a>
+        <a href="blog.html" class="footer-link"><i class="fa-solid fa-podcast footer-icon"></i> Podcast</a>
+        <a href="blog.html" class="footer-link"><i class="fa-solid fa-calendar-days footer-icon"></i> Agenda</a>
+        <a href="about.html" class="footer-link"><i class="fa-solid fa-info-circle footer-icon"></i> À propos</a>
+        <a href="feed.xml" class="footer-link"><i class="fa-solid fa-rss footer-icon"></i> RSS</a>
+      </div>
+
+      <div class="col-md-4 mb-4 mb-md-0">
+        <h5 class="footer-title">Me suivre</h5>
+        <a href="https://www.youtube.com/@agauche" class="footer-link"><i class="fa-brands fa-youtube"></i> YouTube</a>
+        <a href="https://discord.gg/NGBc4nTrEu" class="footer-link"><i class="fa-brands fa-discord footer-icon"></i> Discord</a>
+        <a href="https://x.com/AgaucheYT" class="footer-link"><i class="fa-brands fa-x-twitter footer-icon"></i> Twitter</a>
+        <a href="https://www.facebook.com/AgaucheYoutube" class="footer-link"><i class="fa-brands fa-square-facebook footer-icon"></i> Facebook</a>
+        <a href="https://www.instagram.com/agauche_officiel" class="footer-link"><i class="fa-brands fa-square-instagram footer-icon"></i> Instagram</a>
+        <a href="https://open.spotify.com/show/1ovb7OAtTd5a0yg4uw5wqO" class="footer-link"><i class="fa-brands fa-spotify footer-icon"></i> Spotify</a>
+        <a href="https://deezer.com/show/1001701601" class="footer-link"><i class="fa-brands fa-deezer footer-icon"></i> Deezer</a>
+      </div>
+
+      <div class="col-md-4">
+        <h5 class="footer-title">Soutien & Contact</h5>
+        <a href="https://ko-fi.com/agauche" class="footer-link mb-3">
+          <i class="fa-solid fa-mug-hot footer-icon"></i> Me soutenir sur Ko-fi
+        </a>
+        <a href="mailto:contact@example.com" class="footer-link">
+          <i class="fa-solid fa-envelope footer-icon"></i> Me contacter par email
+        </a>
+
+        <div class="mt-4">
+          <h5 class="footer-title">À propos</h5>
+          <p>Si c'est à gauche, c'est sur À GAUCHE.</p>
+          Des entrevues avec des personnalités et militants de gauche, ainsi que des extraits de pensées et réflexions de gauche.
+        </div>
+      </div>
+    </div>
+
+    <hr class="my-4 bg-light">
+
+    <div class="row">
+      <div class="col-md-6 text-md-start text-center">
+        <p class="mb-0">&copy; 2019-2025 @AgaucheYT. Tous droits réservés.</p>
+      </div>
+      <div class="col-md-6 text-md-end text-center mt-3 mt-md-0">
+        <a href="#" class="text-white me-3"><i class="fa-solid fa-arrow-up"></i> Retour en haut</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

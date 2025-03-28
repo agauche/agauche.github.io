@@ -1,0 +1,922 @@
+<?xml version="1.0"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>@CherOliv</title>
+    <link>https://cheroliv.github.io</link>
+    <atom:link href="https://cheroliv.github.io/feed.xml" rel="self" type="application/rss+xml" />
+    <description>Cheroliv feeds</description>
+    <language>fr-fr</language>
+    <pubDate>ven., 28 mars 2025 23:31:22 +0100</pubDate>
+    <lastBuildDate>ven., 28 mars 2025 23:31:22 +0100</lastBuildDate>
+
+    <item>
+      <title>Kotlin Arrow : Maîtriser la navigation dans la monade Either</title>
+      <link>https://cheroliv.github.io/blog/2024/0075_kotlin_arrow-traverse_right_and_left_post.html</link>
+      <pubDate>mar., 24 sept. 2024 00:00:00 +0200</pubDate>
+      <guid isPermaLink="false">blog/2024/0075_kotlin_arrow-traverse_right_and_left_post.html</guid>
+      	<description>
+	&lt;div id=&quot;toc&quot; class=&quot;toc&quot;&gt;
+&lt;div id=&quot;toctitle&quot;&gt;Sommaire&lt;/div&gt;
+&lt;ul class=&quot;sectlevel1&quot;&gt;
+&lt;li&gt;&lt;a href=&quot;#_introduction&quot;&gt;1. Introduction&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#_quest_ce_que_la_monade_either&quot;&gt;2. Qu&amp;#8217;est-ce que la monade Either ?&lt;/a&gt;
+&lt;ul class=&quot;sectlevel2&quot;&gt;
+&lt;li&gt;&lt;a href=&quot;#_pourquoi_utiliser_either&quot;&gt;2.1. Pourquoi utiliser Either ?&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#_contexte&quot;&gt;3. Contexte&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#_les_différentes_approches&quot;&gt;4. Les différentes approches&lt;/a&gt;
+&lt;ul class=&quot;sectlevel2&quot;&gt;
+&lt;li&gt;&lt;a href=&quot;#_lapproche_classique_avec_when&quot;&gt;4.1. L&amp;#8217;approche classique avec &lt;code&gt;when&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#_utilisation_de_fold_pour_une_approche_plus_concise&quot;&gt;4.2. Utilisation de &lt;code&gt;fold&lt;/code&gt; pour une approche plus concise&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#_transformation_avec_map_et_mapleft&quot;&gt;4.3. Transformation avec &lt;code&gt;map&lt;/code&gt; et &lt;code&gt;mapLeft&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#_gestion_des_erreurs_avec_getorelse&quot;&gt;4.4. Gestion des erreurs avec &lt;code&gt;getOrElse&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#_actions_latérales_avec_onleft_et_onright&quot;&gt;4.5. Actions latérales avec &lt;code&gt;onLeft&lt;/code&gt; et &lt;code&gt;onRight&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#_chaînage_dopérations_avec_flatmap&quot;&gt;4.6. Chaînage d&amp;#8217;opérations avec &lt;code&gt;flatMap&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#_transformation_bidirectionnelle_avec_bimap&quot;&gt;4.7. Transformation bidirectionnelle avec &lt;code&gt;bimap&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#_inversion_des_côtés_avec_swap&quot;&gt;4.8. Inversion des côtés avec &lt;code&gt;swap&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#_utilisation_de_tap_et_tapleft&quot;&gt;4.9. Utilisation de &lt;code&gt;tap&lt;/code&gt; et &lt;code&gt;tapLeft&lt;/code&gt; :&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#_utilisation_de_recover&quot;&gt;4.10. Utilisation de &lt;code&gt;recover&lt;/code&gt; :&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#_cas_dutilisation_pratiques&quot;&gt;5. Cas d&amp;#8217;utilisation pratiques&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#_conclusion&quot;&gt;6. Conclusion&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#_pour_aller_plus_loin&quot;&gt;7. Pour aller plus loin&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div id=&quot;preamble&quot;&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;div class=&quot;title&quot;&gt;&lt;em&gt;Temps de lecture :&lt;/em&gt;&lt;/div&gt;
+&lt;p&gt;12 à 15 minutes.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;div class=&quot;title&quot;&gt;&lt;em&gt;Public cible :&lt;/em&gt;&lt;/div&gt;
+&lt;p&gt;Développeurs Kotlin de niveau intermédiaire à avancé.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_introduction&quot;&gt;1. Introduction&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Dans le monde de la programmation fonctionnelle en Kotlin, la bibliothèque Arrow offre des outils puissants pour gérer les erreurs et les cas alternatifs. Parmi ces outils, la monade &lt;code&gt;Either&lt;/code&gt; se distingue par sa capacité à représenter deux états possibles : succès (Right) ou échec (Left). Mais comment naviguer efficacement entre ces deux états ? C&amp;#8217;est ce que nous allons explorer dans cet article.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_quest_ce_que_la_monade_either&quot;&gt;2. Qu&amp;#8217;est-ce que la monade Either ?&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;La monade &lt;code&gt;Either&lt;/code&gt; est une structure de données qui représente deux possibilités mutuellement exclusives. En Kotlin avec Arrow, elle est souvent utilisée pour gérer les cas de succès et d&amp;#8217;échec d&amp;#8217;une opération, offrant une alternative élégante aux exceptions traditionnelles.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;_pourquoi_utiliser_either&quot;&gt;2.1. Pourquoi utiliser Either ?&lt;/h3&gt;
+&lt;div class=&quot;olist arabic&quot;&gt;
+&lt;ol class=&quot;arabic&quot;&gt;
+&lt;li&gt;
+&lt;p&gt;Gestion explicite des erreurs : Force le développeur à considérer les cas d&amp;#8217;échec.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Composition fonctionnelle : Facilite le chaînage d&amp;#8217;opérations qui peuvent échouer.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Type-safety : Les erreurs sont typées, ce qui aide à les gérer de manière plus précise.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Pas d&amp;#8217;exceptions : Évite les effets de bord et les interruptions inattendues du flux d&amp;#8217;exécution.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_contexte&quot;&gt;3. Contexte&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Imaginons que vous développez une API REST avec &lt;a href=&quot;https://spring.io/projects/spring-boot/&quot;&gt;Spring Boot&lt;/a&gt; et &lt;a href=&quot;https://kotlinlang.org/&quot;&gt;Kotlin&lt;/a&gt;, en utilisant la bibliothèque &lt;a href=&quot;https://arrow-kt.io/&quot;&gt;Arrow&lt;/a&gt;. Vous avez une fonction &lt;code&gt;findOneUserByEmail&lt;/code&gt; qui renvoie un &lt;code&gt;Either&amp;lt;Throwable, User&amp;gt;&lt;/code&gt;. Comment pouvez-vous traiter ce résultat de manière élégante et fonctionnelle ?&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Nous avons une classe User :&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;prettyprint highlight&quot;&gt;&lt;code data-lang=&quot;kotlin&quot;&gt;@file:Suppress(
+    &quot;RemoveRedundantQualifierName&quot;,
+    &quot;MemberVisibilityCanBePrivate&quot;,
+    &quot;SqlNoDataSourceInspection&quot;
+)
+
+package webapp.users
+
+import arrow.core.Either
+import arrow.core.left
+import arrow.core.right
+import com.fasterxml.jackson.annotation.JsonIgnore
+import com.fasterxml.jackson.databind.ObjectMapper
+import jakarta.validation.constraints.NotNull
+import jakarta.validation.constraints.Pattern
+import jakarta.validation.constraints.Size
+import org.springframework.beans.factory.getBean
+import org.springframework.context.ApplicationContext
+import org.springframework.data.r2dbc.core.R2dbcEntityTemplate
+import org.springframework.r2dbc.core.DatabaseClient
+import org.springframework.r2dbc.core.awaitOne
+import org.springframework.r2dbc.core.awaitRowsUpdated
+import webapp.core.property.ANONYMOUS_USER
+import webapp.core.property.EMPTY_STRING
+import webapp.core.utils.AppUtils.cleanField
+import webapp.users.EntityModel.Companion.ID_MEMBER
+import webapp.users.User.UserDao.Attributes.EMAIL_ATTR
+import webapp.users.User.UserDao.Attributes.ID_ATTR
+import webapp.users.User.UserDao.Attributes.LANG_KEY_ATTR
+import webapp.users.User.UserDao.Attributes.LOGIN_ATTR
+import webapp.users.User.UserDao.Attributes.PASSWORD_ATTR
+import webapp.users.User.UserDao.Attributes.VERSION_ATTR
+import webapp.users.User.UserDao.Constraints.LOGIN_REGEX
+import webapp.users.User.UserDao.Fields.EMAIL_FIELD
+import webapp.users.User.UserDao.Fields.ID_FIELD
+import webapp.users.User.UserDao.Fields.LANG_KEY_FIELD
+import webapp.users.User.UserDao.Fields.LOGIN_FIELD
+import webapp.users.User.UserDao.Fields.PASSWORD_FIELD
+import webapp.users.User.UserDao.Fields.VERSION_FIELD
+import webapp.users.User.UserDao.Relations.INSERT
+import webapp.users.security.Role
+import webapp.users.security.Role.RoleDao
+import webapp.users.security.UserRole.UserRoleDao
+import java.util.*
+import jakarta.validation.constraints.Email as EmailConstraint
+
+data class User(
+    override val id: UUID? = null,
+
+    @field:NotNull
+    @field:Pattern(regexp = LOGIN_REGEX)
+    @field:Size(min = 1, max = 50)
+    val login: String,
+
+    @JsonIgnore
+    @field:NotNull
+    @field:Size(min = 60, max = 60)
+    val password: String = EMPTY_STRING,
+
+    @field:EmailConstraint
+    @field:Size(min = 5, max = 254)
+    val email: String = EMPTY_STRING,
+
+    @JsonIgnore
+    val roles: MutableSet&amp;lt;Role&amp;gt; = mutableSetOf(Role(ANONYMOUS_USER)),
+
+    @field:Size(min = 2, max = 10)
+    val langKey: String = EMPTY_STRING,
+
+    @JsonIgnore
+    val version: Long = -1,
+) : EntityModel&amp;lt;UUID&amp;gt;() {
+
+    companion object {
+        @JvmStatic
+        fun main(args: Array&amp;lt;String&amp;gt;) = println(UserDao.Relations.sqlScript)
+    }
+
+    object UserDao {
+        object Constraints {
+            // Regex for acceptable logins
+            const val LOGIN_REGEX =
+                &quot;^(?&amp;gt;[a-zA-Z0-9!$&amp;amp;*+=?^_`{|}~.-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*)|(?&amp;gt;[_.@A-Za-z0-9-]+)$&quot;
+            const val PASSWORD_MIN: Int = 4
+            const val PASSWORD_MAX: Int = 16
+            const val IMAGE_URL_DEFAULT = &quot;https://placehold.it/50x50&quot;
+            const val PHONE_REGEX = &quot;^(\\+|00)?[1-9]\\d{0,49}\$&quot;
+        }
+
+        object Members {
+            const val PASSWORD_MEMBER = &quot;password&quot;
+            const val ROLES_MEMBER = &quot;roles&quot;
+        }
+
+        object Fields {
+            const val ID_FIELD = &quot;`id`&quot;
+            const val LOGIN_FIELD = &quot;`login`&quot;
+            const val PASSWORD_FIELD = &quot;`password`&quot;
+            const val EMAIL_FIELD = &quot;`email`&quot;
+            const val LANG_KEY_FIELD = &quot;`lang_key`&quot;
+            const val VERSION_FIELD = &quot;`version`&quot;
+        }
+
+        object Attributes {
+            val ID_ATTR = ID_FIELD.cleanField()
+            val LOGIN_ATTR = LOGIN_FIELD.cleanField()
+            val PASSWORD_ATTR = PASSWORD_FIELD.cleanField()
+            val EMAIL_ATTR = EMAIL_FIELD.cleanField()
+            const val LANG_KEY_ATTR = &quot;langKey&quot;
+            val VERSION_ATTR = VERSION_FIELD.cleanField()
+        }
+
+        object Relations {
+            const val TABLE_NAME = &quot;`user`&quot;
+            const val SQL_SCRIPT = &quot;&quot;&quot;
+            CREATE TABLE IF NOT EXISTS $TABLE_NAME (
+                $ID_FIELD                     UUID default random_uuid() PRIMARY KEY,
+                $LOGIN_FIELD                  VARCHAR,
+                $PASSWORD_FIELD               VARCHAR,
+                $EMAIL_FIELD                  VARCHAR,
+                $LANG_KEY_FIELD               VARCHAR,
+                $VERSION_FIELD                bigint
+            );
+            CREATE UNIQUE INDEX IF NOT EXISTS `uniq_idx_user_login`
+            ON $TABLE_NAME ($LOGIN_FIELD);
+            CREATE UNIQUE INDEX IF NOT EXISTS `uniq_idx_user_email`
+            ON $TABLE_NAME ($EMAIL_FIELD);
+&quot;&quot;&quot;
+
+            @Suppress(&quot;SqlDialectInspection&quot;)
+            const val INSERT = &quot;&quot;&quot;
+            insert into $TABLE_NAME (
+                $LOGIN_FIELD, $EMAIL_FIELD,
+                $PASSWORD_FIELD, $LANG_KEY_FIELD,
+                $VERSION_FIELD
+            ) values ( :login, :email, :password, :langKey, :version)&quot;&quot;&quot;
+
+            @JvmStatic
+            val sqlScript: String
+                get() = setOf(
+                    UserDao.Relations.SQL_SCRIPT,
+                    RoleDao.Relations.SQL_SCRIPT,
+                    UserRoleDao.Relations.SQL_SCRIPT
+                ).joinToString(&quot;&quot;)
+                    .trimMargin()
+        }
+
+        object Dao {
+            val Pair&amp;lt;User, ApplicationContext&amp;gt;.toJson: String
+                get() = second.getBean&amp;lt;ObjectMapper&amp;gt;().writeValueAsString(first)
+
+            suspend fun Pair&amp;lt;User, ApplicationContext&amp;gt;.save(): Either&amp;lt;Throwable, Long&amp;gt; = try {
+                second.getBean&amp;lt;R2dbcEntityTemplate&amp;gt;()
+                    .databaseClient
+                    .sql(INSERT)
+                    .bind(LOGIN_ATTR, first.login)
+                    .bind(EMAIL_ATTR, first.email)
+                    .bind(PASSWORD_ATTR, first.password)
+                    .bind(LANG_KEY_ATTR, first.langKey)
+                    .bind(VERSION_ATTR, first.version)
+                    .fetch()
+                    .awaitRowsUpdated()
+                    .right()
+            } catch (e: Throwable) {
+                e.left()
+            }
+
+
+            suspend fun ApplicationContext.findOneUserByEmail(
+                email: String
+            ): Either&amp;lt;Throwable, User&amp;gt; = try {
+                getBean&amp;lt;DatabaseClient&amp;gt;()
+                    .sql(&quot;SELECT * FROM `user` WHERE LOWER(email) = LOWER(:email)&quot;)
+                    .bind(&quot;email&quot;, email)
+                    .fetch()
+                    .awaitOne()
+                    .let { row -&amp;gt;
+                        User(
+                            id = row[ID_ATTR] as UUID?,
+                            login = row[LOGIN_ATTR] as String,
+                            password = row[PASSWORD_ATTR] as String,
+                            email = row[EMAIL_ATTR] as String,
+                            langKey = row[LANG_KEY_ATTR] as String,
+                            version = row[VERSION_ATTR] as Long
+                        )
+                    }.right()
+            } catch (e: Throwable) {
+                e.left()
+            }
+        }
+    }
+
+    /** Account REST API URIs */
+    object UserRestApis {
+        const val API_AUTHORITY = &quot;/api/authorities&quot;
+        const val API_USERS = &quot;/api/users&quot;
+        const val API_SIGNUP = &quot;/signup&quot;
+        const val API_SIGNUP_PATH = &quot;$API_USERS$API_SIGNUP&quot;
+        const val API_ACTIVATE = &quot;/activate&quot;
+        const val API_ACTIVATE_PATH = &quot;$API_USERS$API_ACTIVATE?key=&quot;
+        const val API_ACTIVATE_PARAM = &quot;{activationKey}&quot;
+        const val API_ACTIVATE_KEY = &quot;key&quot;
+        const val API_RESET_INIT = &quot;/reset-password/init&quot;
+        const val API_RESET_FINISH = &quot;/reset-password/finish&quot;
+        const val API_CHANGE = &quot;/change-password&quot;
+        const val API_CHANGE_PATH = &quot;$API_USERS$API_CHANGE&quot;
+    }
+}
+
+// Abstract entity model with Generic ID, which can be of any type
+abstract class EntityModel&amp;lt;T&amp;gt;(
+    open val id: T? = null
+) {
+    companion object {
+        const val ID_MEMBER = &quot;id&quot;
+    }
+}
+
+// Generic extension function that allows the ID to be applied to any EntityModel type
+inline fun &amp;lt;reified T : EntityModel&amp;lt;ID&amp;gt;, ID&amp;gt; T.withId(id: ID): T {
+    // Use reflection to create a copy with the passed ID
+    return this::class.constructors.first { it.parameters.any { param -&amp;gt; param.name == ID_MEMBER } }
+        .call(id, *this::class.constructors.first().parameters.drop(1).map { param -&amp;gt;
+            this::class.members.first { member -&amp;gt; member.name == param.name }.call(this)
+        }.toTypedArray())
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_les_différentes_approches&quot;&gt;4. Les différentes approches&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;_lapproche_classique_avec_when&quot;&gt;4.1. L&amp;#8217;approche classique avec &lt;code&gt;when&lt;/code&gt;&lt;/h3&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;prettyprint highlight&quot;&gt;&lt;code data-lang=&quot;kotlin&quot;&gt;val user: User by lazy { userFactory(USER) }
+
+val result: Either&amp;lt;Throwable, User&amp;gt; = context.findOneUserByEmail(user.email)
+
+when (result) {
+    is Either.Left -&amp;gt; {
+        val error = result.value
+        println(&quot;Erreur : ${error.message}&quot;)
+    }
+    is Either.Right -&amp;gt; {
+        val user = result.value
+        println(&quot;Utilisateur trouvé : ${user.login}&quot;)
+    }
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Cette méthode, bien que simple et lisible, ne tire pas pleinement parti des capacités fonctionnelles d&amp;#8217;Arrow.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;_utilisation_de_fold_pour_une_approche_plus_concise&quot;&gt;4.2. Utilisation de &lt;code&gt;fold&lt;/code&gt; pour une approche plus concise&lt;/h3&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;prettyprint highlight&quot;&gt;&lt;code data-lang=&quot;kotlin&quot;&gt;result.fold(
+{ error -&amp;gt; println(&quot;Erreur : ${error.message}&quot;) },
+{ user -&amp;gt; println(&quot;Utilisateur trouvé : ${user.login}&quot;) }
+)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;code&gt;fold&lt;/code&gt; permet de définir des actions pour les deux cas (Left et Right) de manière concise et élégante.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;_transformation_avec_map_et_mapleft&quot;&gt;4.3. Transformation avec &lt;code&gt;map&lt;/code&gt; et &lt;code&gt;mapLeft&lt;/code&gt;&lt;/h3&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;prettyprint highlight&quot;&gt;&lt;code data-lang=&quot;kotlin&quot;&gt;val processedResult = result
+    .map { user -&amp;gt; &quot;Utilisateur trouvé : ${user.login}&quot; }
+    .mapLeft { error -&amp;gt; &quot;Erreur : ${error.message}&quot; }
+
+println(processedResult.merge())&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Cette approche permet de transformer les valeurs contenues dans Either tout en préservant sa structure, idéal pour des chaînes de traitement plus complexes.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;_gestion_des_erreurs_avec_getorelse&quot;&gt;4.4. Gestion des erreurs avec &lt;code&gt;getOrElse&lt;/code&gt;&lt;/h3&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;prettyprint highlight&quot;&gt;&lt;code data-lang=&quot;kotlin&quot;&gt;val user = result.getOrElse { error -&amp;gt;
+    println(&quot;Erreur : ${error.message}&quot;)
+    User(login = &quot;default&quot;, email = &quot;default@example.com&quot;) // utilisateur par défaut
+}
+println(&quot;Login : ${user.login}&quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;code&gt;getOrElse&lt;/code&gt; offre une gestion élégante des erreurs en permettant de fournir une valeur par défaut.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;_actions_latérales_avec_onleft_et_onright&quot;&gt;4.5. Actions latérales avec &lt;code&gt;onLeft&lt;/code&gt; et &lt;code&gt;onRight&lt;/code&gt;&lt;/h3&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;prettyprint highlight&quot;&gt;&lt;code data-lang=&quot;kotlin&quot;&gt;result.onLeft { error -&amp;gt; println(&quot;Erreur : ${error.message}&quot;) }
+.onRight { user -&amp;gt; println(&quot;Utilisateur trouvé : ${user.login}&quot;) }&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Ces méthodes permettent d&amp;#8217;effectuer des actions sur chaque côté sans modifier l&amp;#8217;Either, parfait pour le logging ou les effets secondaires légers.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;_chaînage_dopérations_avec_flatmap&quot;&gt;4.6. Chaînage d&amp;#8217;opérations avec &lt;code&gt;flatMap&lt;/code&gt;&lt;/h3&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;prettyprint highlight&quot;&gt;&lt;code data-lang=&quot;kotlin&quot;&gt;fun findUser(email: String): Either&amp;lt;Throwable, User&amp;gt; = // ... implémentation
+
+fun getUserPermissions(user: User): Either&amp;lt;Throwable, List&amp;lt;String&amp;gt;&amp;gt; = // ... implémentation
+
+val userPermissions = findUser(&quot;user@example.com&quot;)
+    .flatMap { user -&amp;gt; getUserPermissions(user) }&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;code&gt;flatMap&lt;/code&gt; est utile pour enchaîner des opérations qui retournent elles-mêmes des &lt;code&gt;Either&lt;/code&gt;, évitant ainsi les &lt;code&gt;Either&lt;/code&gt; imbriqués.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;_transformation_bidirectionnelle_avec_bimap&quot;&gt;4.7. Transformation bidirectionnelle avec &lt;code&gt;bimap&lt;/code&gt;&lt;/h3&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;prettyprint highlight&quot;&gt;&lt;code data-lang=&quot;kotlin&quot;&gt;val result: Either&amp;lt;Throwable, User&amp;gt; = // ... obtention du résultat
+val processedResult = result.bimap(
+    { error -&amp;gt; &quot;Erreur: ${error.message}&quot; },
+    { user -&amp;gt; &quot;Utilisateur: ${user.login}&quot; }
+)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;code&gt;bimap&lt;/code&gt; permet de transformer à la fois le côté gauche et le côté droit en une seule opération.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;_inversion_des_côtés_avec_swap&quot;&gt;4.8. Inversion des côtés avec &lt;code&gt;swap&lt;/code&gt;&lt;/h3&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;prettyprint highlight&quot;&gt;&lt;code data-lang=&quot;kotlin&quot;&gt;val result: Either&amp;lt;Throwable, User&amp;gt; = // ... obtention du résultat
+val swapped = result.swap()&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;code&gt;swap&lt;/code&gt; est utile lorsque vous voulez inverser les côtés d&amp;#8217;un &lt;code&gt;Either&lt;/code&gt;, par exemple pour adapter l&amp;#8217;interface d&amp;#8217;une fonction à une autre.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;_utilisation_de_tap_et_tapleft&quot;&gt;4.9. Utilisation de &lt;code&gt;tap&lt;/code&gt; et &lt;code&gt;tapLeft&lt;/code&gt; :&lt;/h3&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;prettyprint highlight&quot;&gt;&lt;code data-lang=&quot;kotlin&quot;&gt;result.tap { user -&amp;gt; println(&quot;Utilisateur trouvé : ${user.login}&quot;) }
+.tapLeft { error -&amp;gt; println(&quot;Erreur : ${error.message}&quot;) }&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Similaire à &lt;code&gt;onLeft&lt;/code&gt; et &lt;code&gt;onRight&lt;/code&gt;, mais ces méthodes retournent l&amp;#8217;Either original, ce qui est utile pour le chaînage d&amp;#8217;opérations.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;_utilisation_de_recover&quot;&gt;4.10. Utilisation de &lt;code&gt;recover&lt;/code&gt; :&lt;/h3&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;prettyprint highlight&quot;&gt;&lt;code data-lang=&quot;kotlin&quot;&gt;val recoveredUser = result.recover { error -&amp;gt;
+    println(&quot;Erreur récupérée : ${error.message}&quot;)
+    User(login = &quot;recovered&quot;, email = &quot;recovered@example.com&quot;)
+}
+println(&quot;Login : ${recoveredUser.login}&quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Cette méthode permet de transformer un Either.Left en Either.Right en fournissant une valeur de remplacement.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_cas_dutilisation_pratiques&quot;&gt;5. Cas d&amp;#8217;utilisation pratiques&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Utilisez &lt;code&gt;fold&lt;/code&gt; pour des opérations simples nécessitant un traitement pour chaque cas.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Préférez &lt;code&gt;map&lt;/code&gt; et &lt;code&gt;mapLeft&lt;/code&gt; pour des transformations de données sans changer la structure de l&apos;`Either`.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Optez pour &lt;code&gt;flatMap&lt;/code&gt; lors du chaînage d&amp;#8217;opérations pouvant échouer.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Employez &lt;code&gt;recover&lt;/code&gt; pour fournir une valeur par défaut en cas d&amp;#8217;erreur.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Choisissez &lt;code&gt;onLeft&lt;/code&gt; et &lt;code&gt;onRight&lt;/code&gt; (ou &lt;code&gt;tap&lt;/code&gt; et &lt;code&gt;tapLeft&lt;/code&gt;) pour des effets secondaires comme le logging.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Utilisez &lt;code&gt;bimap&lt;/code&gt; pour transformer les deux côtés en une seule opération.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Appliquez &lt;code&gt;swap&lt;/code&gt; lorsque vous devez adapter l&amp;#8217;interface d&amp;#8217;une fonction à une autre.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_conclusion&quot;&gt;6. Conclusion&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Chacune de ces approches a ses avantages selon le contexte d&amp;#8217;utilisation. Les méthodes comme &lt;code&gt;fold&lt;/code&gt;, &lt;code&gt;map&lt;/code&gt;/&lt;code&gt;mapLeft&lt;/code&gt;, et &lt;code&gt;recover&lt;/code&gt; sont particulièrement utiles lorsque vous voulez enchaîner plusieurs opérations ou transformer les données de manière fonctionnelle.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;La monade &lt;code&gt;Either&lt;/code&gt; d&amp;#8217;Arrow offre une flexibilité remarquable pour gérer les cas de succès et d&amp;#8217;erreur dans vos applications Kotlin. En maîtrisant ces différentes approches, vous pourrez écrire un code plus robuste, plus lisible et plus fonctionnel.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Dans votre prochain projet, n&amp;#8217;hésitez pas à explorer ces techniques pour tirer le meilleur parti de la programmation fonctionnelle avec Kotlin et Arrow !&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_pour_aller_plus_loin&quot;&gt;7. Pour aller plus loin&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Documentation officielle d&amp;#8217;Arrow : &lt;a href=&quot;https://arrow-kt.io/docs/apidocs/arrow-core/arrow.core/-either/&quot;&gt;Arrow Either&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Kotlin Coroutines avec Arrow : &lt;a href=&quot;https://arrow-kt.io/docs/fx/&quot;&gt;Arrow Fx Coroutines&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;N&amp;#8217;oubliez pas de partager vos expériences et vos techniques préférées pour travailler avec &lt;code&gt;Either&lt;/code&gt; dans les commentaires ci-dessous !&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+	</description>
+    </item>
+    <item>
+      <title>Guide pratique : recherche de fichiers sous linux</title>
+      <link>https://cheroliv.github.io/blog/2024/0074_seach_file_linux_post.html</link>
+      <pubDate>lun., 23 sept. 2024 00:00:00 +0200</pubDate>
+      <guid isPermaLink="false">blog/2024/0074_seach_file_linux_post.html</guid>
+      	<description>
+	&lt;div id=&quot;toc&quot; class=&quot;toc&quot;&gt;
+&lt;div id=&quot;toctitle&quot;&gt;Sommaire&lt;/div&gt;
+&lt;ul class=&quot;sectlevel1&quot;&gt;
+&lt;li&gt;&lt;a href=&quot;#_introduction&quot;&gt;1. Introduction&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#_utilisation_de_la_commande_find&quot;&gt;2. Utilisation de la commande &lt;code&gt;find&lt;/code&gt;&lt;/a&gt;
+&lt;ul class=&quot;sectlevel2&quot;&gt;
+&lt;li&gt;&lt;a href=&quot;#_options_supplémentaires_pour_find&quot;&gt;2.1. Options supplémentaires pour &lt;code&gt;find&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#_utilisation_de_la_commande_locate&quot;&gt;3. Utilisation de la commande &lt;code&gt;locate&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#_utilisation_de_la_commande_grep_pour_rechercher_du_texte_dans_des_fichiers&quot;&gt;4. Utilisation de la commande &lt;code&gt;grep&lt;/code&gt; pour rechercher du texte dans des fichiers&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#_conclusion&quot;&gt;5. Conclusion&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div id=&quot;preamble&quot;&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;div class=&quot;title&quot;&gt;&lt;em&gt;Temps de lecture :&lt;/em&gt;&lt;/div&gt;
+&lt;p&gt;5 à 7 minutes.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;div class=&quot;title&quot;&gt;&lt;em&gt;Public :&lt;/em&gt;&lt;/div&gt;
+&lt;p&gt;Débutant et intermédiaires.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;div class=&quot;title&quot;&gt;La problématique :&lt;/div&gt;
+&lt;p&gt;Rechercher des fichiers dans un système d&amp;#8217;exploitation linux à travers le terminal.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_introduction&quot;&gt;1. Introduction&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Dans cet article, nous allons explorer comment rechercher un fichier sous Ubuntu en utilisant un terminal Zsh. Zsh (Z shell) est un interpréteur de commandes puissant et largement utilisé pour sa flexibilité et ses fonctionnalités avancées.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Ubuntu, une distribution Linux populaire, propose plusieurs outils en ligne de commande pour rechercher des fichiers. Nous verrons comment utiliser des commandes telles que &lt;code&gt;find&lt;/code&gt;, &lt;code&gt;locate&lt;/code&gt; et &lt;code&gt;grep&lt;/code&gt; pour localiser des fichiers rapidement et efficacement dans le terminal.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_utilisation_de_la_commande_find&quot;&gt;2. Utilisation de la commande &lt;code&gt;find&lt;/code&gt;&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;La commande &lt;code&gt;find&lt;/code&gt; permet de rechercher des fichiers dans un répertoire spécifique et ses sous-répertoires. Sa syntaxe de base est la suivante :&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;prettyprint highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;find [chemin] -name [nom_du_fichier]&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Voici un exemple pratique où nous recherchons un fichier nommé &lt;code&gt;example.txt&lt;/code&gt; dans le répertoire &lt;code&gt;/home&lt;/code&gt; :&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;prettyprint highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;find /home -name &quot;example.txt&quot;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Cette commande va parcourir tous les sous-répertoires de &lt;code&gt;/home&lt;/code&gt; et afficher le chemin complet du fichier s&amp;#8217;il est trouvé.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;strong&gt;Manuel en ligne de la commande &lt;code&gt;find&lt;/code&gt; : &lt;a href=&quot;https://man.archlinux.org/man/find.1.fr/&quot;&gt;man find&lt;/a&gt;&lt;/strong&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect2&quot;&gt;
+&lt;h3 id=&quot;_options_supplémentaires_pour_find&quot;&gt;2.1. Options supplémentaires pour &lt;code&gt;find&lt;/code&gt;&lt;/h3&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;La commande &lt;code&gt;find&lt;/code&gt; est très puissante et dispose de nombreuses options. Voici quelques exemples utiles :&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Rechercher par type de fichier&lt;/strong&gt; : Pour rechercher uniquement des fichiers, utilisez &lt;code&gt;-type f&lt;/code&gt;, et pour rechercher des répertoires, utilisez &lt;code&gt;-type d&lt;/code&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Rechercher par taille&lt;/strong&gt; : Vous pouvez aussi filtrer les fichiers en fonction de leur taille en utilisant l&amp;#8217;option &lt;code&gt;-size&lt;/code&gt;. Par exemple, pour rechercher des fichiers de plus de 100 Mo, utilisez :&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;prettyprint highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;find /home -size +100M&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_utilisation_de_la_commande_locate&quot;&gt;3. Utilisation de la commande &lt;code&gt;locate&lt;/code&gt;&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;La commande &lt;code&gt;locate&lt;/code&gt; est plus rapide que &lt;code&gt;find&lt;/code&gt; car elle utilise une base de données pré-indexée des fichiers présents sur le système. Vous devez d&amp;#8217;abord mettre à jour cette base de données avec la commande suivante :&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;prettyprint highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;sudo updatedb&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Ensuite, vous pouvez rechercher un fichier comme ceci :&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;prettyprint highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;locate example.txt&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;J&amp;#8217;utilise &lt;a href=&quot;https://fr.wikipedia.org/wiki/Z_Shell&quot;&gt;zsh&lt;/a&gt; avec &lt;a href=&quot;https://github.com/ohmyzsh/ohmyzsh/wiki&quot;&gt;oh-my-zsh&lt;/a&gt;, il s&amp;#8217;avere que la commande &lt;code&gt;locate&lt;/code&gt; n&amp;#8217;est pas accessible depuis &lt;code&gt;zsh&lt;/code&gt; mais bien possible depuis &lt;code&gt;bash&lt;/code&gt;, pour palier à cela, l&amp;#8217;argument &lt;code&gt;-c&lt;/code&gt; de la commande &lt;code&gt;bash&lt;/code&gt; permet de lancer une commande &lt;code&gt;bash&lt;/code&gt; depuis un autre type de terminal.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;ici je cherche les fichiers qui se termine par le motif &lt;code&gt;001.pdf&lt;/code&gt; dans le user directory&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;prettyprint highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;bash -c &quot;locate ~/*001.pdf&quot;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;strong&gt;Manuel en ligne de la commande &lt;code&gt;locate&lt;/code&gt; : &lt;a href=&quot;https://man.archlinux.org/man/locate.1.fr/&quot;&gt;man locate&lt;/a&gt;&lt;/strong&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_utilisation_de_la_commande_grep_pour_rechercher_du_texte_dans_des_fichiers&quot;&gt;4. Utilisation de la commande &lt;code&gt;grep&lt;/code&gt; pour rechercher du texte dans des fichiers&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Si vous voulez rechercher un texte spécifique à l&amp;#8217;intérieur d&amp;#8217;un fichier, vous pouvez utiliser &lt;code&gt;grep&lt;/code&gt;. Par exemple, pour rechercher l&amp;#8217;occurrence du mot &quot;Ubuntu&quot; dans tous les fichiers &lt;code&gt;.txt&lt;/code&gt; du répertoire courant, utilisez :&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;prettyprint highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;grep &quot;Ubuntu&quot; *.txt&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_conclusion&quot;&gt;5. Conclusion&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;La recherche de fichiers sous Ubuntu via un terminal Zsh peut se faire à l&amp;#8217;aide de plusieurs outils puissants. &lt;code&gt;find&lt;/code&gt; est flexible et offre une multitude d&amp;#8217;options, tandis que &lt;code&gt;locate&lt;/code&gt; permet une recherche rapide à l&amp;#8217;aide d&amp;#8217;une base de données pré-construite. Enfin, &lt;code&gt;grep&lt;/code&gt; permet de trouver des occurrences de texte à l&amp;#8217;intérieur des fichiers.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Ces commandes vous offrent une gamme complète d&amp;#8217;outils pour rendre vos recherches de fichiers plus efficaces et adaptées à vos besoins et chacune des ces commande posséde un manuel visible avec la commande &lt;code&gt;man&lt;/code&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+	</description>
+    </item>
+    <item>
+      <title>Exposer un port linux subsystem pour l&apos;hôte windows</title>
+      <link>https://cheroliv.github.io/blog/2024/0072_Exposer_un_port_linux_subsystem_post.adoc.html</link>
+      <pubDate>jeu., 1 févr. 2024 00:00:00 +0100</pubDate>
+      <guid isPermaLink="false">blog/2024/0072_Exposer_un_port_linux_subsystem_post.adoc.html</guid>
+      	<description>
+	&lt;div class=&quot;paragraph&quot;&gt;
+&lt;div class=&quot;title&quot;&gt;La problématique :&lt;/div&gt;
+&lt;p&gt;Comment exposer le port 8820 du sous système ubuntu dont l&amp;#8217;hôte est windows ?
+Ubuntu est amorcé par la commande &lt;code&gt;wsl --install&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;div class=&quot;title&quot;&gt;Réference :&lt;/div&gt;
+&lt;p&gt;&lt;a href=&quot;https://www.it-connect.fr/wsl-2-port-forwarding-comment-acceder-a-sa-machine-virtuelle-a-distance/&quot;&gt;wsl-2-port-forwarding&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+	</description>
+    </item>
+    <item>
+      <title>Installer Pandoc</title>
+      <link>https://cheroliv.github.io/blog/2024/0070_installer_pandoc_post.html</link>
+      <pubDate>mar., 30 janv. 2024 00:00:00 +0100</pubDate>
+      <guid isPermaLink="false">blog/2024/0070_installer_pandoc_post.html</guid>
+      	<description>
+	&lt;div id=&quot;preamble&quot;&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;div class=&quot;title&quot;&gt;&lt;em&gt;Temps de lecture : 3 min&lt;/em&gt;&lt;/div&gt;
+&lt;p&gt;Pandoc un convertisseur universel de document&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Pandoc est un logiciel de traitement de texte open source qui peut être utilisé pour convertir des documents entre différents formats.
+Il existe plusieurs façons d&amp;#8217;installer Pandoc.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_installation_à_partir_de_la_page_de_téléchargement&quot;&gt;&lt;strong&gt;Installation à partir de la page de téléchargement&lt;/strong&gt;&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Pour installer Pandoc à partir de la page de téléchargement, procédez comme suit :&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;olist arabic&quot;&gt;
+&lt;ol class=&quot;arabic&quot;&gt;
+&lt;li&gt;
+&lt;p&gt;Accédez à la page de téléchargement de Pandoc : &lt;a href=&quot;https://pandoc.org/installing.html/&quot;&gt;https://pandoc.org/installing.html&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Téléchargez l&amp;#8217;installateur de package pour votre système d&amp;#8217;exploitation.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Exécutez l&amp;#8217;installateur pour installer Pandoc.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;strong&gt;Installation à partir d&amp;#8217;un fichier zip&lt;/strong&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Pour installer Pandoc à partir d&amp;#8217;un fichier zip, procédez comme suit :&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;olist arabic&quot;&gt;
+&lt;ol class=&quot;arabic&quot;&gt;
+&lt;li&gt;
+&lt;p&gt;Téléchargez le fichier zip contenant les binaires de Pandoc et la documentation.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Décompressez le fichier zip.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Déplacez les binaires vers un répertoire de votre choix.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;strong&gt;Installation à l&amp;#8217;aide de Chocolatey&lt;/strong&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Pour installer Pandoc à l&amp;#8217;aide de Chocolatey, procédez comme suit :&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;olist arabic&quot;&gt;
+&lt;ol class=&quot;arabic&quot;&gt;
+&lt;li&gt;
+&lt;p&gt;Ouvrez une invite de commande.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Exécutez la commande suivante :&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;prettyprint highlight&quot;&gt;&lt;code data-lang=&quot;powershell&quot;&gt;choco install pandoc&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;strong&gt;Installation à l&amp;#8217;aide de winget&lt;/strong&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Pour installer Pandoc à l&amp;#8217;aide de winget, procédez comme suit :&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;olist arabic&quot;&gt;
+&lt;ol class=&quot;arabic&quot;&gt;
+&lt;li&gt;
+&lt;p&gt;Ouvrez une invite de commande.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Exécutez la commande suivante :&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;prettyprint highlight&quot;&gt;&lt;code data-lang=&quot;powershell&quot;&gt;winget install --source winget --exact --id JohnMacFarlane.Pandoc&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;strong&gt;Recommandations&lt;/strong&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Par défaut, Pandoc crée des PDFs à l&amp;#8217;aide de LaTeX.
+Il est recommandé d&amp;#8217;installer LaTeX via MiKTeX.
+Avec l&amp;#8217;option &lt;code&gt;--pdf-engine&lt;/code&gt;, vous pouvez toutefois spécifier d&amp;#8217;autres programmes pour cette tâche.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;strong&gt;Mise en garde&lt;/strong&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;L&amp;#8217;utilisation de plusieurs méthodes d&amp;#8217;installation peut entraîner deux installations distinctes de Pandoc.
+Il est recommandé de désinstaller correctement Pandoc avant de passer à une méthode d&amp;#8217;installation alternative.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;strong&gt;Installation sur linux par WSL&lt;/strong&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Vérifiez si la version de pandoc dans votre gestionnaire de paquets n&amp;#8217;est pas obsolète.
+Pandoc se trouve dans les dépôts de Debian, Ubuntu, Slackware, Arch, Fedora, NixOS, openSUSE, gentoo et Void.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Pour obtenir la dernière version, nous proposons un paquet binaire pour l&amp;#8217;architecture amd64 sur la page de téléchargement.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;L&amp;#8217;exécutable est lié statiquement et n&amp;#8217;a pas de dépendances dynamiques ni de dépendances sur des fichiers de données externes.
+Remarque : en raison du lien statique, le binaire pandoc de ce paquet ne peut pas utiliser les filtres lua qui nécessitent des modules lua externes écrits en C.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Un tarball et un installateur deb sont fournis.
+Pour installer le deb :&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;prettyprint highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;sudo dpkg -i $DEB&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Exemple au moment de l&amp;#8217;écriture :&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;prettyprint highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;wget https://github.com/jgm/pandoc/releases/download/3.1.11.1/pandoc-3.1.11.1-1-amd64.deb&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;prettyprint highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;sudo dpkg -i pandoc-3.1.11.1-1-amd64.deb&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;où &lt;code&gt;$DEB&lt;/code&gt; est le chemin vers le deb téléchargé.
+Cela installera l&amp;#8217;exécutable &lt;code&gt;pandoc&lt;/code&gt; et la page de manuel.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Si vous utilisez une distribution basée sur RPM, vous pourrez peut-être installer le deb de notre page de téléchargement à l&amp;#8217;aide d&amp;#8217;alien.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Sur n&amp;#8217;importe quelle distribution, vous pouvez installer à partir du tarball dans &lt;code&gt;$DEST&lt;/code&gt; (par exemple, &lt;code&gt;/usr/local/&lt;/code&gt; ou &lt;code&gt;$HOME/.local&lt;/code&gt;) en faisant :&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;prettyprint highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;tar xvzf $TGZ --strip-components 1 -C $DEST&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;où &lt;code&gt;$TGZ&lt;/code&gt; est le chemin vers le tarball zippé téléchargé.
+Pour les versions de Pandoc antérieures à 2.0, qui ne fournissent pas de tarball, essayez plutôt :&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;prettyprint highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;ar p $DEB data.tar.gz | tar xvz --strip-components 2 -C $DEST&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Vous pouvez également installer à partir de la source, en utilisant les instructions ci-dessous sous &lt;code&gt;Compilation à partir de la source&lt;/code&gt;.
+Notez que la plupart des distributions ont la plate-forme Haskell dans leurs dépôts de paquets.
+Par exemple, sur Debian/Ubuntu, vous pouvez l&amp;#8217;installer avec &lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;prettyprint highlight&quot;&gt;&lt;code data-lang=&quot;bash&quot;&gt;apt-get install haskell-platform&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Par défaut, Pandoc crée des PDFs à l&amp;#8217;aide de LaTeX.
+Nous vous recommandons d&amp;#8217;installer TeX Live via votre gestionnaire de paquets.
+(Sur Debian/Ubuntu, &lt;code&gt;apt-get install texlive&lt;/code&gt;).
+Avec l&amp;#8217;option &lt;code&gt;--pdf-engine&lt;/code&gt;, vous pouvez toutefois spécifier d&amp;#8217;autres programmes pour cette tâche.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+	</description>
+    </item>
+
+  </channel> 
+</rss>
